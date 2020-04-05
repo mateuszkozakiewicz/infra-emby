@@ -1,0 +1,107 @@
+version: "3.7"
+services:
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:amd64-latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/sonarr/config:/config
+      - /media:/media
+    restart: unless-stopped
+    env_file:
+      - sonarr.env
+      - common.env
+
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr:amd64-latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/radarr/config:/config
+      - /media:/media
+    restart: unless-stopped
+    env_file:
+      - radarr.env
+      - common.env
+
+  emby:
+    container_name: emby
+    image: emby/embyserver:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/emby/config:/config
+      - /media:/media
+    restart: unless-stopped
+    env_file:
+      - common.env
+      - emby.env
+
+  transmission:
+    image: linuxserver/transmission:amd64-latest
+    container_name: transmission
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/transmission/config:/config
+      - /srv/transmission/watch:/watch
+      - /media/downloads:/downloads
+    ports:
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+    env_file:
+      - transmission.env
+      - common.env
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - 80:80
+      - 443:443
+
+  nginx-proxy-letsencrypt:
+    container_name: nginx-proxy-letsencrypt
+    image: jrcs/letsencrypt-nginx-proxy-companion:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - nginx.env
+
+volumes:
+  certs:
+  vhost:
+  html:
