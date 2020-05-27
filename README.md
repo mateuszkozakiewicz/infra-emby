@@ -5,7 +5,10 @@
 - Emby
 - Sonarr
 - Radarr
+- Bazarr
+- Jackett
 - Transmission
+- Netdata
 - nginx-proxy
 - letsencrypt-nginx-proxy-companion
 
@@ -17,6 +20,10 @@ Set necessary envs in Travis project Settings:
 - EMBY_HOST
 - SONARR_HOST
 - RADARR_HOST
+- BAZARR_HOST
+- JACKETT_HOST
+- DEFAULT_EMAIL
+- NETDATA_HOST
 - TRANSMISSION_HOST
 - TRANSMISSION_USER
 - TRANSMISSION_PASS
@@ -30,6 +37,9 @@ Set necessary envs in Travis project Settings:
 export EMBY_HOST=emby.localhost \
 export SONARR_HOST=sonarr.localhost \
 export RADARR_HOST=radarr.localhost \
+export BAZARR_HOST=bazarr.localhost \
+export JACKETT_HOST=jackett.localhost \
+export NETDATA_HOST=netdata.localhost \
 export TRANSMISSION_HOST=transmission.localhost \
 export TRANSMISSION_USER=test \
 export TRANSMISSION_PASS=test \

@@ -11,7 +11,7 @@ services:
     volumes:
       - /srv/sonarr/config:/config
       - /media:/media
-    restart: unless-stopped
+    restart: always
     env_file:
       - sonarr.env
       - common.env
@@ -27,9 +27,25 @@ services:
     volumes:
       - /srv/radarr/config:/config
       - /media:/media
-    restart: unless-stopped
+    restart: always
     env_file:
       - radarr.env
+      - common.env
+
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr:amd64-latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/bazarr/config:/config
+      - /media:/media
+    restart: always
+    env_file:
+      - bazarr.env
       - common.env
 
   emby:
@@ -43,10 +59,26 @@ services:
     volumes:
       - /srv/emby/config:/config
       - /media:/media
-    restart: unless-stopped
+    restart: always
     env_file:
       - common.env
       - emby.env
+
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett:amd64-latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/jackett/config:/config
+      - /srv/transmission/watch:/downloads
+    restart: always
+    env_file:
+      - jackett.env
+      - common.env
 
   transmission:
     image: linuxserver/transmission:amd64-latest
@@ -63,10 +95,29 @@ services:
     ports:
       - 51413:51413
       - 51413:51413/udp
-    restart: unless-stopped
+    restart: always
     env_file:
       - transmission.env
       - common.env
+
+  netdata:
+    container_name: netdata
+    image: netdata/netdata:latest
+    hostname: ubuntu.dlink
+    cap_add:
+      - SYS_PTRACE
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+    env_file:
+      - netdata.env
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -77,13 +128,17 @@ services:
         max-size: "10m"
         max-file: "10"
     volumes:
+      - /srv/nginx/config:/etc/nginx/conf.d
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
     ports:
       - 80:80
       - 443:443
+    env_file:
+      - nginx.env
 
   nginx-proxy-letsencrypt:
     container_name: nginx-proxy-letsencrypt
@@ -98,8 +153,9 @@ services:
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
     env_file:
-      - nginx.env
+      - letsencrypt.env
 
 volumes:
   certs:
