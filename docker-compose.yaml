@@ -12,9 +12,14 @@ services:
       - /srv/sonarr/config:/config
       - /media:/media
     restart: always
-    env_file:
-      - sonarr.env
-      - common.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${SONARR_HOST}
+      - LETSENCRYPT_HOST=${SONARR_HOST}
+      - VIRTUAL_PORT=8989
 
   radarr:
     container_name: radarr
@@ -28,9 +33,14 @@ services:
       - /srv/radarr/config:/config
       - /media:/media
     restart: always
-    env_file:
-      - radarr.env
-      - common.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${RADARR_HOST}
+      - LETSENCRYPT_HOST=${RADARR_HOST}
+      - VIRTUAL_PORT=7878
 
   bazarr:
     container_name: bazarr
@@ -44,9 +54,14 @@ services:
       - /srv/bazarr/config:/config
       - /media:/media
     restart: always
-    env_file:
-      - bazarr.env
-      - common.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${BAZARR_HOST}
+      - LETSENCRYPT_HOST=${BAZARR_HOST}
+      - VIRTUAL_PORT=6767
 
   emby:
     container_name: emby
@@ -60,9 +75,14 @@ services:
       - /srv/emby/config:/config
       - /media:/media
     restart: always
-    env_file:
-      - common.env
-      - emby.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${EMBY_HOST}
+      - LETSENCRYPT_HOST=${EMBY_HOST}
+      - VIRTUAL_PORT=8096
 
   jackett:
     container_name: jackett
@@ -76,9 +96,14 @@ services:
       - /srv/jackett/config:/config
       - /srv/transmission/watch:/downloads
     restart: always
-    env_file:
-      - jackett.env
-      - common.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${JACKETT_HOST}
+      - LETSENCRYPT_HOST=${JACKETT_HOST}
+      - VIRTUAL_PORT=9117
 
   transmission:
     image: linuxserver/transmission:amd64-latest
@@ -96,9 +121,17 @@ services:
       - 51413:51413
       - 51413:51413/udp
     restart: always
-    env_file:
-      - transmission.env
-      - common.env
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${TRANSMISSION_HOST}
+      - LETSENCRYPT_HOST=${TRANSMISSION_HOST}
+      - VIRTUAL_PORT=9091
+      - USER=${TRANSMISSION_USER}
+      - PASS=${TRANSMISSION_PASS}
+      - TRANSMISSION_WEB_HOME=/combustion-release/
 
   netdata:
     container_name: netdata
@@ -121,8 +154,10 @@ services:
     security_opt:
       - apparmor:unconfined
     restart: always
-    env_file:
-      - netdata.env
+    environment:
+      - VIRTUAL_HOST=${NETDATA_HOST}
+      - VIRTUAL_PORT=199999
+      - PGID=998
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -142,8 +177,6 @@ services:
     ports:
       - 80:80
       - 443:443
-    env_file:
-      - nginx.env
 
   nginx-proxy-letsencrypt:
     container_name: nginx-proxy-letsencrypt
@@ -159,8 +192,9 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
-    env_file:
-      - letsencrypt.env
+    environment: 
+      - DEFAULT_EMAIL=${DEFAULT_EMAIL}
+      - NGINX_PROXY_CONTAINER=nginx-proxy
 
 volumes:
   certs:
