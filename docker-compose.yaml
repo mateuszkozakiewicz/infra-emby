@@ -115,6 +115,11 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /srv/netdata/etc/netdata:/etc/netdata
+      - /srv/netdata/var/lib/netdata:/var/lib/netdata
+      - /srv/netdata/var/cache/netdata:/var/cache/netdata
+    security_opt:
+      - apparmor:unconfined
     restart: always
     env_file:
       - netdata.env
