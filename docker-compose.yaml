@@ -159,6 +159,27 @@ services:
       - VIRTUAL_PORT=199999
       - PGID=998
 
+  duplicati:
+    container_name: duplicati
+    image: linuxserver/duplicati:amd64-latest
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /srv/duplicati/config:/config
+      - /srv:/backups
+      - /srv/duplicati/source:/source
+    restart: always
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - VIRTUAL_HOST=${DUPLICATI_HOST}
+      - VIRTUAL_PORT=8200
+
   nginx-proxy:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
@@ -192,7 +213,7 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
-    environment: 
+    environment:
       - DEFAULT_EMAIL=${DEFAULT_EMAIL}
       - NGINX_PROXY_CONTAINER=nginx-proxy
 
