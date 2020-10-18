@@ -180,6 +180,26 @@ services:
       - VIRTUAL_HOST=${DUPLICATI_HOST}
       - VIRTUAL_PORT=8200
 
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - TZ=Europe/Warsaw
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 0 5 * * *
+      - WATCHTOWER_NOTIFICATIONS=slack
+      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=${WATCHTOWER_HOOK_URL}
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=warn
+      - WATCHTOWER_NO_STARTUP_MESSAGE=true
+
   nginx-proxy:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
