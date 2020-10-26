@@ -8,6 +8,7 @@
 - [Bazarr](https://hub.docker.com/r/linuxserver/bazarr)
 - [Jackett](https://hub.docker.com/r/linuxserver/jackett)
 - [Transmission](https://hub.docker.com/r/linuxserver/transmission)
+- [Bitwarden](https://github.com/dani-garcia/bitwarden_rs)
 - [Netdata](https://hub.docker.com/r/netdata/netdata)
 - [Duplicati](https://hub.docker.com/r/linuxserver/duplicati)
 - [watchtower](https://hub.docker.com/r/containrrr/watchtower)
@@ -26,6 +27,7 @@ BAZARR_HOST=bazarr.localhost
 JACKETT_HOST=jackett.localhost
 NETDATA_HOST=netdata.localhost
 DUPLICATI_HOST=duplicati.local
+BITWARDEN_HOST=bitwarden.local
 TRANSMISSION_HOST=transmission.localhost
 TRANSMISSION_USER=test
 TRANSMISSION_PASS=test

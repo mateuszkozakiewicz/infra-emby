@@ -200,6 +200,22 @@ services:
       - WATCHTOWER_NOTIFICATIONS_LEVEL=warn
       - WATCHTOWER_NO_STARTUP_MESSAGE=true
 
+  bitwarden-rs:
+    container_name: bitwarden-rs
+    image: bitwardenrs/server:latest
+    volumes:
+      - /srv/bitwarden/:/data/
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - WEBSOCKET_ENABLED=false
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=false
+      - VIRTUAL_HOST=${BITWARDEN_HOST}
+      - LETSENCRYPT_HOST=${BITWARDEN_HOST}
+
   nginx-proxy:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
