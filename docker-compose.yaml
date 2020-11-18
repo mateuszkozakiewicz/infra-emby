@@ -3,11 +3,6 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:amd64-latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/sonarr/config:/config
       - /media:/media
@@ -24,11 +19,6 @@ services:
   radarr:
     container_name: radarr
     image: linuxserver/radarr:amd64-latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/radarr/config:/config
       - /media:/media
@@ -45,11 +35,6 @@ services:
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr:amd64-latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/bazarr/config:/config
       - /media:/media
@@ -66,11 +51,6 @@ services:
   emby:
     container_name: emby
     image: emby/embyserver:latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/emby/config:/config
       - /media:/media
@@ -87,11 +67,6 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett:amd64-latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/jackett/config:/config
       - /srv/transmission/watch:/downloads
@@ -108,11 +83,6 @@ services:
   transmission:
     image: linuxserver/transmission:amd64-latest
     container_name: transmission
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/transmission/config:/config
       - /srv/transmission/watch:/watch
@@ -139,11 +109,6 @@ services:
     hostname: ubuntu.dlink
     cap_add:
       - SYS_PTRACE
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -162,11 +127,6 @@ services:
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:amd64-latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/duplicati/config:/config
       - /srv:/backups
@@ -183,11 +143,6 @@ services:
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
@@ -205,6 +160,7 @@ services:
     image: bitwardenrs/server:latest
     volumes:
       - /srv/bitwarden/:/data/
+    restart: always
     environment:
       - PUID=911
       - UID=911
@@ -219,11 +175,6 @@ services:
   nginx-proxy:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - /srv/nginx/config:/etc/nginx/conf.d
       - certs:/etc/nginx/certs
@@ -238,11 +189,6 @@ services:
   nginx-proxy-letsencrypt:
     container_name: nginx-proxy-letsencrypt
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "10"
     volumes:
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
