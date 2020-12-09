@@ -166,7 +166,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - WEBSOCKET_ENABLED=false
+      - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=false
       - VIRTUAL_HOST=${BITWARDEN_HOST}
@@ -178,7 +178,7 @@ services:
     volumes:
       - /srv/nginx/config:/etc/nginx/conf.d
       - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
+      - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
@@ -191,7 +191,7 @@ services:
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
     volumes:
       - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
+      - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
@@ -201,5 +201,4 @@ services:
 
 volumes:
   certs:
-  vhost:
   html:
