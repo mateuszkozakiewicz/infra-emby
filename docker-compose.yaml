@@ -176,7 +176,7 @@ services:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
     volumes:
-      - /srv/nginx/config:/etc/nginx/conf.d
+      - /srv/nginx/conf.d:/etc/nginx/conf.d
       - certs:/etc/nginx/certs
       - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
       - html:/usr/share/nginx/html
@@ -191,7 +191,7 @@ services:
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
     volumes:
       - certs:/etc/nginx/certs
-      - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
+      - /srv/nginx/vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
