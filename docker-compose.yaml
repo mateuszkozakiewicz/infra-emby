@@ -31,6 +31,7 @@ services:
       - VIRTUAL_HOST=${RADARR_HOST}
       - LETSENCRYPT_HOST=${RADARR_HOST}
       - VIRTUAL_PORT=7878
+      - DOCKER_MODS=gilbn/theme.park:radarr
 
   bazarr:
     container_name: bazarr
@@ -47,6 +48,7 @@ services:
       - VIRTUAL_HOST=${BAZARR_HOST}
       - LETSENCRYPT_HOST=${BAZARR_HOST}
       - VIRTUAL_PORT=6767
+      - DOCKER_MODS=gilbn/theme.park:bazarr
 
   emby:
     container_name: emby
@@ -79,6 +81,7 @@ services:
       - VIRTUAL_HOST=${JACKETT_HOST}
       - LETSENCRYPT_HOST=${JACKETT_HOST}
       - VIRTUAL_PORT=9117
+      - DOCKER_MODS=gilbn/theme.park:jackett
 
   transmission:
     image: linuxserver/transmission:amd64-latest
@@ -101,6 +104,7 @@ services:
       - VIRTUAL_PORT=9091
       - USER=${TRANSMISSION_USER}
       - PASS=${TRANSMISSION_PASS}
+      - DOCKER_MODS=gilbn/theme.park:transmission
       - TRANSMISSION_WEB_HOME=/combustion-release/
 
   netdata:
@@ -182,6 +186,8 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
+    environment:
+      - TZ=Europe/Warsaw
     ports:
       - 80:80
       - 443:443
@@ -198,6 +204,7 @@ services:
     environment:
       - DEFAULT_EMAIL=${DEFAULT_EMAIL}
       - NGINX_PROXY_CONTAINER=nginx-proxy
+      - TZ=Europe/Warsaw
 
 volumes:
   certs:
