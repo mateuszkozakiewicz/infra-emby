@@ -15,6 +15,7 @@ services:
       - VIRTUAL_HOST=${SONARR_HOST}
       - LETSENCRYPT_HOST=${SONARR_HOST}
       - VIRTUAL_PORT=8989
+      - DOCKER_MODS=gilbn/theme.park:sonarr
 
   radarr:
     container_name: radarr
