@@ -177,12 +177,12 @@ services:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy:latest
     volumes:
-      - /srv/nginx/conf.d:/etc/nginx/conf.d
       - certs:/etc/nginx/certs
-      - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - confd:/etc/nginx/conf.d
       - dhparam:/etc/nginx/dhparam
+      - html:/usr/share/nginx/html
+      - vhostd:/etc/nginx/vhost.d:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
     environment:
       - TZ=Europe/Warsaw
@@ -195,8 +195,8 @@ services:
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
     volumes:
       - certs:/etc/nginx/certs
-      - /srv/nginx/vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
+      - vhostd:/etc/nginx/vhost.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
     environment:
@@ -206,6 +206,8 @@ services:
 
 volumes:
   certs:
-  html:
+  confd:
   dhparam:
+  html:
+  vhostd:
   portainer_data:
