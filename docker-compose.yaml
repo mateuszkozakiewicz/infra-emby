@@ -129,6 +129,21 @@ services:
       - VIRTUAL_PORT=199999
       - PGID=998
 
+  agent:
+    image: portainer/agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+  portainer:
+    image: portainer/portainer-ce
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    volumes:
+      - portainer_data:/data
+    environment:
+      - VIRTUAL_HOST=${PORTAINER_HOST}
+      - VIRTUAL_PORT=9000
+
   duplicati:
     container_name: duplicati
     image: linuxserver/duplicati:amd64-latest
@@ -210,3 +225,4 @@ services:
 volumes:
   certs:
   html:
+  portainer_data:
