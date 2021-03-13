@@ -182,6 +182,7 @@ services:
       - /srv/nginx/vhost.d:/etc/nginx/vhost.d:ro
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - dhparam:/etc/nginx/dhparam
     restart: always
     environment:
       - TZ=Europe/Warsaw
@@ -206,4 +207,5 @@ services:
 volumes:
   certs:
   html:
+  dhparam:
   portainer_data:
