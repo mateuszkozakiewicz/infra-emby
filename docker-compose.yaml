@@ -108,27 +108,6 @@ services:
       - DOCKER_MODS=gilbn/theme.park:transmission
       - TRANSMISSION_WEB_HOME=/combustion-release/
 
-  netdata:
-    container_name: netdata
-    image: netdata/netdata:latest
-    hostname: ubuntu.dlink
-    cap_add:
-      - SYS_PTRACE
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /srv/netdata/etc/netdata:/etc/netdata
-      - /srv/netdata/var/lib/netdata:/var/lib/netdata
-      - /srv/netdata/var/cache/netdata:/var/cache/netdata
-    security_opt:
-      - apparmor:unconfined
-    restart: always
-    environment:
-      - VIRTUAL_HOST=${NETDATA_HOST}
-      - VIRTUAL_PORT=199999
-      - PGID=998
-
   agent:
     container_name: portainer_agent
     image: portainer/agent
