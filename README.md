@@ -12,8 +12,8 @@
 - [Portainer](https://hub.docker.com/r/portainer/portainer)
 - [Duplicati](https://hub.docker.com/r/linuxserver/duplicati)
 - [watchtower](https://hub.docker.com/r/containrrr/watchtower)
-- [nginx-proxy](https://hub.docker.com/r/jwilder/nginx-proxy)
-- [letsencrypt-nginx-proxy-companion](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion)
+- [logrotate](https://hub.docker.com/r/blacklabelops/logrotate)
+- [traefik](https://hub.docker.com/_/traefik)
 
 ## Local testing
 
@@ -26,13 +26,16 @@ RADARR_HOST=radarr.localhost
 BAZARR_HOST=bazarr.localhost
 JACKETT_HOST=jackett.localhost
 PORTAINER_HOST=portainer.localhost
-DUPLICATI_HOST=duplicati.local
-BITWARDEN_HOST=bitwarden.local
+DUPLICATI_HOST=duplicati.localhost
+BITWARDEN_HOST=bitwarden.localhost
+TRAEFIK_HOST=traefik.localhost
 TRANSMISSION_HOST=transmission.localhost
 TRANSMISSION_USER=test
 TRANSMISSION_PASS=test
 LETSENCRYPT_EMAIL=test@test.test
 WATCHTOWER_HOOK_URL=
+TRAEFIK_PILOT_TOKEN=
+CF_DNS_API_TOKEN=
 ```
 
 - start project

@@ -7,14 +7,17 @@ services:
       - /srv/sonarr/config:/config
       - /media:/media
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`${SONARR_HOST}`)"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${SONARR_HOST}
-      - LETSENCRYPT_HOST=${SONARR_HOST}
-      - VIRTUAL_PORT=8989
       - DOCKER_MODS=gilbn/theme.park:sonarr
 
   radarr:
@@ -24,14 +27,17 @@ services:
       - /srv/radarr/config:/config
       - /media:/media
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`${RADARR_HOST}`)"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${RADARR_HOST}
-      - LETSENCRYPT_HOST=${RADARR_HOST}
-      - VIRTUAL_PORT=7878
       - DOCKER_MODS=gilbn/theme.park:radarr
 
   bazarr:
@@ -41,14 +47,17 @@ services:
       - /srv/bazarr/config:/config
       - /media:/media
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`${BAZARR_HOST}`)"
+      - "traefik.http.routers.bazarr.entrypoints=websecure"
+      - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${BAZARR_HOST}
-      - LETSENCRYPT_HOST=${BAZARR_HOST}
-      - VIRTUAL_PORT=6767
       - DOCKER_MODS=gilbn/theme.park:bazarr
 
   emby:
@@ -58,14 +67,17 @@ services:
       - /srv/emby/config:/config
       - /media:/media
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emby.rule=Host(`${EMBY_HOST}`)"
+      - "traefik.http.routers.emby.entrypoints=websecure"
+      - "traefik.http.routers.emby.tls.certresolver=letsencrypt"
+      - "traefik.http.services.emby.loadbalancer.server.port=8096"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${EMBY_HOST}
-      - LETSENCRYPT_HOST=${EMBY_HOST}
-      - VIRTUAL_PORT=8096
 
   jackett:
     container_name: jackett
@@ -74,14 +86,17 @@ services:
       - /srv/jackett/config:/config
       - /srv/transmission/watch:/downloads
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.rule=Host(`${JACKETT_HOST}`)"
+      - "traefik.http.routers.jackett.entrypoints=websecure"
+      - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${JACKETT_HOST}
-      - LETSENCRYPT_HOST=${JACKETT_HOST}
-      - VIRTUAL_PORT=9117
       - DOCKER_MODS=gilbn/theme.park:jackett
 
   transmission:
@@ -95,16 +110,18 @@ services:
       - 51413:51413
       - 51413:51413/udp
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOST}`)"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      - "traefik.http.middlewares.transmission.basicauth.users=${TRANSMISSION_USER}:${TRANSMISSION_PASS}"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${TRANSMISSION_HOST}
-      - LETSENCRYPT_HOST=${TRANSMISSION_HOST}
-      - VIRTUAL_PORT=9091
-      - USER=${TRANSMISSION_USER}
-      - PASS=${TRANSMISSION_PASS}
       - DOCKER_MODS=gilbn/theme.park:transmission
       - TRANSMISSION_WEB_HOME=/combustion-release/
 
@@ -123,9 +140,12 @@ services:
     volumes:
       - portainer_data:/data
     restart: always
-    environment:
-      - VIRTUAL_HOST=${PORTAINER_HOST}
-      - VIRTUAL_PORT=9000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST}`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
 
   duplicati:
     container_name: duplicati
@@ -135,13 +155,17 @@ services:
       - /srv:/backups
       - /srv/duplicati/source:/source
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.duplicati.rule=Host(`${DUPLICATI_HOST}`)"
+      - "traefik.http.routers.duplicati.entrypoints=websecure"
+      - "traefik.http.routers.duplicati.tls.certresolver=letsencrypt"
+      - "traefik.http.services.duplicati.loadbalancer.server.port=8200"
     environment:
       - PUID=911
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - VIRTUAL_HOST=${DUPLICATI_HOST}
-      - VIRTUAL_PORT=8200
 
   watchtower:
     container_name: watchtower
@@ -158,12 +182,30 @@ services:
       - WATCHTOWER_NOTIFICATIONS_LEVEL=warn
       - WATCHTOWER_NO_STARTUP_MESSAGE=true
 
+  logrotate:
+    container_name: logrotate
+    image: blacklabelops/logrotate:latest
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - /var/log/docker:/var/log/docker
+    restart: always
+    environment: 
+      - TZ=Europe/Warsaw
+      - "LOGS_DIRECTORIES=/var/lib/docker/containers /var/log/docker"
+      - LOGROTATE_SIZE=5M
+
   bitwarden-rs:
     container_name: bitwarden-rs
     image: bitwardenrs/server:latest
     volumes:
       - /srv/bitwarden/:/data/
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bitwarden.rule=Host(`${BITWARDEN_HOST}`)"
+      - "traefik.http.routers.bitwarden.entrypoints=websecure"
+      - "traefik.http.routers.bitwarden.tls.certresolver=letsencrypt"
+      - "traefik.http.services.bitwarden.loadbalancer.server.port=80"
     environment:
       - PUID=911
       - UID=911
@@ -172,44 +214,45 @@ services:
       - WEBSOCKET_ENABLED=true
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=false
-      - VIRTUAL_HOST=${BITWARDEN_HOST}
-      - LETSENCRYPT_HOST=${BITWARDEN_HOST}
 
-  nginx-proxy:
-    container_name: nginx-proxy
-    image: jwilder/nginx-proxy:latest
-    volumes:
-      - certs:/etc/nginx/certs
-      - confd:/etc/nginx/conf.d
-      - dhparam:/etc/nginx/dhparam
-      - html:/usr/share/nginx/html
-      - vhostd:/etc/nginx/vhost.d:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: always
-    environment:
-      - TZ=Europe/Warsaw
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    command:
+      - "--pilot.token=${TRAEFIK_PILOT_TOKEN}"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=${DEFAULT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
     ports:
-      - 80:80
-      - 443:443
-
-  nginx-proxy-letsencrypt:
-    container_name: nginx-proxy-letsencrypt
-    image: jrcs/letsencrypt-nginx-proxy-companion:latest
-    volumes:
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhostd:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: always
+      - "80:80"
+      - "443:443"
     environment:
-      - DEFAULT_EMAIL=${DEFAULT_EMAIL}
-      - NGINX_PROXY_CONTAINER=nginx-proxy
       - TZ=Europe/Warsaw
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - DEFAULT_EMAIL=${DEFAULT_EMAIL}
+      - TRAEFIK_PILOT_TOKEN=${TRAEFIK_PILOT_TOKEN}
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
-  certs:
-  confd:
-  dhparam:
-  html:
-  vhostd:
+  letsencrypt:
   portainer_data:
