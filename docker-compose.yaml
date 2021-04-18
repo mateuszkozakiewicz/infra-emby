@@ -12,7 +12,9 @@ services:
       - "traefik.http.routers.sonarr.rule=Host(`${SONARR_HOST}`)"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sonarr.middlewares=traefik-real-ip"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -32,7 +34,9 @@ services:
       - "traefik.http.routers.radarr.rule=Host(`${RADARR_HOST}`)"
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.radarr.middlewares=traefik-real-ip"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -52,7 +56,9 @@ services:
       - "traefik.http.routers.bazarr.rule=Host(`${BAZARR_HOST}`)"
       - "traefik.http.routers.bazarr.entrypoints=websecure"
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bazarr.middlewares=traefik-real-ip"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -72,7 +78,9 @@ services:
       - "traefik.http.routers.emby.rule=Host(`${EMBY_HOST}`)"
       - "traefik.http.routers.emby.entrypoints=websecure"
       - "traefik.http.routers.emby.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.emby.middlewares=traefik-real-ip"
       - "traefik.http.services.emby.loadbalancer.server.port=8096"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -91,7 +99,9 @@ services:
       - "traefik.http.routers.jackett.rule=Host(`${JACKETT_HOST}`)"
       - "traefik.http.routers.jackett.entrypoints=websecure"
       - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jackett.middlewares=traefik-real-ip"
       - "traefik.http.services.jackett.loadbalancer.server.port=9117"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -115,8 +125,10 @@ services:
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOST}`)"
       - "traefik.http.routers.transmission.entrypoints=websecure"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.transmission.middlewares=traefik-real-ip"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.middlewares.transmission.basicauth.users=${TRANSMISSION_USER}:${TRANSMISSION_PASS}"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -189,7 +201,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers
       - /var/log/docker:/var/log/docker
     restart: always
-    environment: 
+    environment:
       - TZ=Europe/Warsaw
       - "LOGS_DIRECTORIES=/var/lib/docker/containers /var/log/docker"
       - LOGROTATE_SIZE=5M
@@ -205,7 +217,9 @@ services:
       - "traefik.http.routers.bitwarden.rule=Host(`${BITWARDEN_HOST}`)"
       - "traefik.http.routers.bitwarden.entrypoints=websecure"
       - "traefik.http.routers.bitwarden.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bitwarden.middlewares=traefik-real-ip"
       - "traefik.http.services.bitwarden.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -222,6 +236,14 @@ services:
       - "--pilot.token=${TRAEFIK_PILOT_TOKEN}"
       - "--log.level=INFO"
       - "--accesslog=true"
+      - "--accesslog.format=json"
+      - "--accesslog.fields.headers.defaultmode=drop"
+      - "--accesslog.fields.headers.names.X-Real-Ip=keep"
+      - "--accesslog.fields.defaultmode=drop"
+      - "--accesslog.fields.headers.defaultmode=drop"
+      - "--accesslog.fields.names.RequestHost=keep"
+      - "--accesslog.fields.names.RequestPath=keep"
+      - "--accesslog.fields.names.RequestMethod=keep"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -235,6 +257,8 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=${DEFAULT_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
+      - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
@@ -253,6 +277,16 @@ services:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
+  whoami:
+    image: "traefik/whoami"
+    container_name: "whoami"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.emby.red`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
 volumes:
   letsencrypt:
   portainer_data:
