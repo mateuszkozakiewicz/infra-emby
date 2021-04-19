@@ -282,7 +282,7 @@ services:
     container_name: "whoami"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.emby.red`)"
+      - "traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST}`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
       - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
