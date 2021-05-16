@@ -20,7 +20,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - DOCKER_MODS=gilbn/theme.park:sonarr
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
 
   radarr:
     container_name: radarr
@@ -42,7 +42,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - DOCKER_MODS=gilbn/theme.park:radarr
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
 
   bazarr:
     container_name: bazarr
@@ -64,7 +64,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - DOCKER_MODS=gilbn/theme.park:bazarr
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
 
   emby:
     container_name: emby
@@ -107,7 +107,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - DOCKER_MODS=gilbn/theme.park:jackett
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:jackett
 
   transmission:
     image: linuxserver/transmission:amd64-latest
@@ -134,7 +134,7 @@ services:
       - UID=911
       - GID=911
       - TZ=Europe/Warsaw
-      - DOCKER_MODS=gilbn/theme.park:transmission
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:transmission
       - TRANSMISSION_WEB_HOME=/combustion-release/
 
   agent:
@@ -157,7 +157,10 @@ services:
       - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST}`)"
       - "traefik.http.routers.portainer.entrypoints=websecure"
       - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.portainer.middlewares=rewrite"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - traefik.http.middlewares.rewrite.plugin.rewrite.rewrites.regex=</head>
+      - traefik.http.middlewares.rewrite.plugin.rewrite.rewrites.replacement=<link rel="stylesheet" type="text/css" href="https://theme-park.dev/CSS/themes/portainer/organizr-dark.css"></head>
 
   duplicati:
     container_name: duplicati
@@ -259,6 +262,8 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
       - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
+      - "--experimental.plugins.rewrite.modulename=github.com/traefik/plugin-rewritebody"
+      - "--experimental.plugins.rewrite.version=v0.3.1"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
