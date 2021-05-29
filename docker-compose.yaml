@@ -1,4 +1,5 @@
 version: "3.7"
+
 services:
   sonarr:
     container_name: sonarr
@@ -203,6 +204,7 @@ services:
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers
       - /var/log/docker:/var/log/docker
+      - logrotate_status:/logrotate-status
     restart: always
     environment:
       - TZ=Europe/Warsaw
@@ -235,6 +237,7 @@ services:
   traefik:
     container_name: traefik
     image: traefik:latest
+    restart: always
     command:
       - "--pilot.token=${TRAEFIK_PILOT_TOKEN}"
       - "--log.level=INFO"
@@ -285,6 +288,7 @@ services:
   whoami:
     image: "traefik/whoami"
     container_name: "whoami"
+    restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST}`)"
@@ -292,6 +296,8 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
       - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+
 volumes:
   letsencrypt:
   portainer_data:
+  logrotate_status:
