@@ -223,8 +223,15 @@ services:
       - "traefik.http.routers.bitwarden.entrypoints=websecure"
       - "traefik.http.routers.bitwarden.tls.certresolver=letsencrypt"
       - "traefik.http.routers.bitwarden.middlewares=traefik-real-ip"
+      - "traefik.http.routers.bitwarden.service=bitwarden"
       - "traefik.http.services.bitwarden.loadbalancer.server.port=80"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+      - "traefik.http.routers.bitwarden-websocket-https.rule=Host(`${BITWARDEN_HOST}`) && Path(`/notifications/hub`)"
+      - "traefik.http.routers.bitwarden-websocket-https.entrypoints=websecure"
+      - "traefik.http.routers.bitwarden-websocket-https.tls=true"
+      - "traefik.http.routers.bitwarden-websocket-https.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bitwarden-websocket-https.service=bitwarden-websocket"
+      - "traefik.http.services.bitwarden-websocket.loadbalancer.server.port=3012"
     environment:
       - PUID=911
       - UID=911
@@ -253,6 +260,8 @@ services:
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.file=true"
+      - "--providers.file.filename=/etc/traefik/rules.toml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
@@ -284,6 +293,7 @@ services:
     volumes:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./rules.toml:/etc/traefik/rules.toml
 
   whoami:
     image: "traefik/whoami"
