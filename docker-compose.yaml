@@ -126,9 +126,9 @@ services:
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOST}`)"
       - "traefik.http.routers.transmission.entrypoints=websecure"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.transmission.middlewares=traefik-real-ip"
+      - "traefik.http.routers.transmission.middlewares=traefik-real-ip,transmission-auth"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-      - "traefik.http.middlewares.transmission.basicauth.users=${TRANSMISSION_USER}:${TRANSMISSION_PASS}"
+      - "traefik.http.middlewares.transmission-auth.basicauth.users=${TRANSMISSION_USER}:${TRANSMISSION_PASS}"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
