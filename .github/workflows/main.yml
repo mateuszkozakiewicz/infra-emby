@@ -6,7 +6,7 @@ on:
 
 jobs:
   copy_files:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: rsync deployments
@@ -21,7 +21,7 @@ jobs:
 
   start_docker:
     needs: copy_files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: create secrets
         uses: appleboy/ssh-action@master
