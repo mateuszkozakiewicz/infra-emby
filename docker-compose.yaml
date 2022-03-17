@@ -14,6 +14,11 @@ services:
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.sonarr.middlewares=traefik-real-ip"
+      - "traefik.http.routers.sonarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.sonarr-api.rule=Host(`${SONARR_HOST}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.sonarr-api.entrypoints=websecure"
+      - "traefik.http.routers.sonarr-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sonarr-api.middlewares=traefik-real-ip"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -36,6 +41,11 @@ services:
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.radarr.middlewares=traefik-real-ip"
+      - "traefik.http.routers.radarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.radarr-api.rule=Host(`${RADARR_HOST}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.radarr-api.entrypoints=websecure"
+      - "traefik.http.routers.radarr-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.radarr-api.middlewares=traefik-real-ip"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -58,6 +68,7 @@ services:
       - "traefik.http.routers.bazarr.entrypoints=websecure"
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.bazarr.middlewares=traefik-real-ip"
+      - "traefik.http.routers.bazarr.middlewares=authproxy-errors,authproxy-auth"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -101,6 +112,11 @@ services:
       - "traefik.http.routers.jackett.entrypoints=websecure"
       - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
       - "traefik.http.routers.jackett.middlewares=traefik-real-ip"
+      - "traefik.http.routers.jackett.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.jackett-api.rule=Host(`${JACKETT_HOST}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.jackett-api.entrypoints=websecure"
+      - "traefik.http.routers.jackett-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jackett-api.middlewares=traefik-real-ip"
       - "traefik.http.services.jackett.loadbalancer.server.port=9117"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -128,8 +144,8 @@ services:
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
       - "traefik.http.routers.transmission.middlewares=traefik-real-ip,transmission-auth"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-      - "traefik.http.middlewares.transmission-auth.basicauth.users=${TRANSMISSION_USER}:${TRANSMISSION_PASS}"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+      - "traefik.http.routers.transmission.middlewares=authproxy-errors,authproxy-auth"
     environment:
       - PUID=911
       - UID=911
@@ -137,51 +153,6 @@ services:
       - TZ=Europe/Warsaw
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:transmission
       - TRANSMISSION_WEB_HOME=/combustion-release/
-
-  agent:
-    container_name: portainer-agent
-    image: portainer/agent
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/docker/volumes:/var/lib/docker/volumes
-
-  portainer:
-    container_name: portainer-server
-    image: portainer/portainer-ce
-    command: -H tcp://agent:9001 --tlsskipverify
-    volumes:
-      - portainer_data:/data
-    restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST}`)"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.portainer.middlewares=rewrite"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-      - traefik.http.middlewares.rewrite.plugin.rewrite.rewrites.regex=</head>
-      - traefik.http.middlewares.rewrite.plugin.rewrite.rewrites.replacement=<link rel="stylesheet" type="text/css" href="https://theme-park.dev/CSS/themes/portainer/organizr-dark.css"></head>
-
-  duplicati:
-    container_name: duplicati
-    image: linuxserver/duplicati:amd64-latest
-    volumes:
-      - /srv/duplicati/config:/config
-      - /srv:/backups
-      - /srv/duplicati/source:/source
-    restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.duplicati.rule=Host(`${DUPLICATI_HOST}`)"
-      - "traefik.http.routers.duplicati.entrypoints=websecure"
-      - "traefik.http.routers.duplicati.tls.certresolver=letsencrypt"
-      - "traefik.http.services.duplicati.loadbalancer.server.port=8200"
-    environment:
-      - PUID=911
-      - UID=911
-      - GID=911
-      - TZ=Europe/Warsaw
 
   watchtower:
     container_name: watchtower
@@ -210,36 +181,6 @@ services:
       - TZ=Europe/Warsaw
       - "LOGS_DIRECTORIES=/var/lib/docker/containers /var/log/docker"
       - LOGROTATE_SIZE=5M
-
-  bitwarden-rs:
-    container_name: bitwarden-rs
-    image: bitwardenrs/server:latest
-    volumes:
-      - /srv/bitwarden/:/data/
-    restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bitwarden.rule=Host(`${BITWARDEN_HOST}`)"
-      - "traefik.http.routers.bitwarden.entrypoints=websecure"
-      - "traefik.http.routers.bitwarden.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.bitwarden.middlewares=traefik-real-ip"
-      - "traefik.http.routers.bitwarden.service=bitwarden"
-      - "traefik.http.services.bitwarden.loadbalancer.server.port=80"
-      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
-      - "traefik.http.routers.bitwarden-websocket-https.rule=Host(`${BITWARDEN_HOST}`) && Path(`/notifications/hub`)"
-      - "traefik.http.routers.bitwarden-websocket-https.entrypoints=websecure"
-      - "traefik.http.routers.bitwarden-websocket-https.tls=true"
-      - "traefik.http.routers.bitwarden-websocket-https.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.bitwarden-websocket-https.service=bitwarden-websocket"
-      - "traefik.http.services.bitwarden-websocket.loadbalancer.server.port=3012"
-    environment:
-      - PUID=911
-      - UID=911
-      - GID=911
-      - TZ=Europe/Warsaw
-      - WEBSOCKET_ENABLED=true
-      - SIGNUPS_ALLOWED=false
-      - INVITATIONS_ALLOWED=false
 
   traefik:
     container_name: traefik
@@ -306,6 +247,74 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
       - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+
+  jellyfin:
+    image: "jellyfin/jellyfin"
+    container_name: jellyfin
+    volumes:
+      - /srv/jellyfin/config:/config
+      - /srv/jellyfin/cache:/cache
+      - /media:/media:ro
+    group_add:
+      - 122
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`${JELLYFIN_HOST}`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jellyfin.middlewares=traefik-real-ip"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.emby.red
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+
+  authproxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy
+    container_name: "authproxy"
+    restart: always
+    command:
+      - --http-address=0.0.0.0:4180
+      - --provider=google
+      - --client-id=${OAUTH2_CLIENT_ID}
+      - --client-secret=${OAUTH2_CLIENT_SECRET}
+      - --cookie-secret=${OAUTH2_COOKIE_SECRET}
+      - --authenticated-emails-file=/var/authorized-emails
+      - --set-xauthrequest
+      - --cookie-expire=672h
+      - --cookie-refresh=1h
+      - --cookie-secure=true
+      - --cookie-httponly=true
+      - --request-logging=false
+      - --cookie-domain=${EMBY_HOST}
+      - --redirect-url=https://${AUTH_HOST}
+      - --set-authorization-header
+      - --reverse-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authproxy.rule=Host(`${AUTH_HOST}`) || PathPrefix(`/oauth2`)"
+      - "traefik.http.routers.authproxy.entrypoints=websecure"
+      - "traefik.http.routers.authproxy.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.authproxy.middlewares=traefik-real-ip"
+      - "traefik.http.services.authproxy.loadbalancer.server.port=4180"
+      - "traefik.http.services.authproxy.loadbalancer.passHostHeader=false"
+      - "traefik.http.middlewares.authproxy-auth.forwardAuth.address=https://${AUTH_HOST}/oauth2/auth"
+      - "traefik.http.middlewares.authproxy-auth.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.authproxy-errors.errors.status=401-403"
+      - "traefik.http.middlewares.authproxy-errors.errors.service=authproxy@docker"
+      - "traefik.http.middlewares.authproxy-errors.errors.query=/oauth2/sign_in"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+    environment:
+      - TZ=Europe/Warsaw
+    volumes:
+      - ./authorized-emails:/var/authorized-emails
 
 volumes:
   letsencrypt:
