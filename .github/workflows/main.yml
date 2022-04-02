@@ -2,7 +2,12 @@ name: deploy
 
 on:
   push:
-    branches: [master]
+    branches: 
+      - master
+    paths-ignore:
+      - '**/terraform/**'
+      - '**/README.md'
+      - '**/.gitignore'
 
 jobs:
   copy_files:

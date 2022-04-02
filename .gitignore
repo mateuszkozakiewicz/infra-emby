@@ -1,1 +1,5 @@
 .vscode
+terraform.tfstate*
+.terraform
+.terraform.lock*
+*.local*
