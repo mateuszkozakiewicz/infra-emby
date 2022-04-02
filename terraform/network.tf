@@ -4,6 +4,7 @@ locals {
   internet_gateway_name    = "internet_gateway"
   cidr_subnet              = "10.0.0.0/24"
   cidr_vpn                 = "10.0.0.0/16"
+  anywhere                 = "0.0.0.0/0"
   internet_gateway_enabled = true
 }
 
@@ -50,7 +51,7 @@ resource "oci_core_route_table" "test_route_table" {
     network_entity_id = oci_core_internet_gateway.internet_gateway.id
 
     #Optional
-    destination      = local.cidr_subnet
+    destination      = local.anywhere
     destination_type = "CIDR_BLOCK"
   }
 }
