@@ -40,7 +40,7 @@ resource "oci_core_internet_gateway" "internet_gateway" {
   display_name = local.internet_gateway_name
 }
 
-resource "oci_core_route_table" "test_route_table" {
+resource "oci_core_route_table" "route_table" {
   #Required
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_vcn.vcn.id
@@ -53,4 +53,10 @@ resource "oci_core_route_table" "test_route_table" {
     destination      = local.anywhere
     destination_type = "CIDR_BLOCK"
   }
+}
+
+resource "oci_core_route_table_attachment" "route_table_attachment" {
+  #Required    
+  subnet_id = oci_core_subnet.subnet.id
+  route_table_id =oci_core_route_table.route_table.id
 }
