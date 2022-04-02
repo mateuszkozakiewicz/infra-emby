@@ -4,7 +4,6 @@ locals {
   internet_gateway_name    = "internet_gateway"
   cidr_subnet              = "10.0.0.0/24"
   cidr_vpn                 = "10.0.0.0/16"
-  anywhere                 = "0.0.0.0/0"
   internet_gateway_enabled = true
 }
 
