@@ -48,5 +48,9 @@ resource "oci_core_route_table" "test_route_table" {
   route_rules {
     #Required
     network_entity_id = oci_core_internet_gateway.internet_gateway.id
+
+    #Optional
+    destination      = local.cidr_subnet
+    destination_type = "CIDR_BLOCK"
   }
 }
