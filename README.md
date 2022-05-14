@@ -9,6 +9,7 @@
 - [Jackett](https://hub.docker.com/r/linuxserver/jackett)
 - [Prowlarr](https://github.com/Prowlarr/Prowlarr)
 - [Transmission](https://hub.docker.com/r/linuxserver/transmission)
+- [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr)
 - [watchtower](https://hub.docker.com/r/containrrr/watchtower)
 - [logrotate](https://hub.docker.com/r/blacklabelops/logrotate)
 - [traefik](https://hub.docker.com/_/traefik)
