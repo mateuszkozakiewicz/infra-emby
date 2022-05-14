@@ -7,6 +7,7 @@
 - [Radarr](https://hub.docker.com/r/linuxserver/radarr)
 - [Bazarr](https://hub.docker.com/r/linuxserver/bazarr)
 - [Jackett](https://hub.docker.com/r/linuxserver/jackett)
+- [Prowlarr](https://github.com/Prowlarr/Prowlarr)
 - [Transmission](https://hub.docker.com/r/linuxserver/transmission)
 - [watchtower](https://hub.docker.com/r/containrrr/watchtower)
 - [logrotate](https://hub.docker.com/r/blacklabelops/logrotate)
@@ -24,6 +25,7 @@ SONARR_HOST=sonarr.localhost
 RADARR_HOST=radarr.localhost
 BAZARR_HOST=bazarr.localhost
 JACKETT_HOST=jackett.localhost
+PROWLARR_HOST=prowlarr.localhost
 TRAEFIK_HOST=traefik.localhost
 TRANSMISSION_HOST=transmission.localhost
 WHOAMI_HOST=whoami.localhost

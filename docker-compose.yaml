@@ -126,6 +126,28 @@ services:
       - TZ=Europe/Warsaw
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:jackett
 
+  prowlarr:
+    container_name: prowlarr
+    image: linuxserver/prowlarr:amd64-develop
+    volumes:
+      - /srv/prowlarr/config:/config
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_HOST}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.prowlarr.middlewares=traefik-real-ip"
+      - "traefik.http.routers.prowlarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+    environment:
+      - PUID=911
+      - UID=911
+      - GID=911
+      - TZ=Europe/Warsaw
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:prowlarr
+
   transmission:
     image: linuxserver/transmission:amd64-latest
     container_name: transmission
