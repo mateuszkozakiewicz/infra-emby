@@ -96,32 +96,6 @@ services:
       - GID=911
       - TZ=Europe/Warsaw
 
-  jackett:
-    container_name: jackett
-    image: linuxserver/jackett:amd64-latest
-    volumes:
-      - /srv/jackett/config:/config
-      - /srv/transmission/watch:/downloads
-    restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.rule=Host(`${JACKETT_HOST}`)"
-      - "traefik.http.routers.jackett.entrypoints=websecure"
-      - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.jackett.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.jackett-api.rule=Host(`${JACKETT_HOST}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.jackett-api.entrypoints=websecure"
-      - "traefik.http.routers.jackett-api.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.jackett-api.middlewares=traefik-real-ip"
-      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
-      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
-    environment:
-      - PUID=911
-      - UID=911
-      - GID=911
-      - TZ=Europe/Warsaw
-      - DOCKER_MODS=ghcr.io/gilbn/theme.park:jackett
-
   prowlarr:
     container_name: prowlarr
     image: linuxserver/prowlarr:amd64-develop
@@ -311,6 +285,16 @@ services:
       - SECRET=${OAUTH2_COOKIE_SECRET}
       - AUTH_HOST=${AUTH_HOST}
       - COOKIE_DOMAIN=${EMBY_HOST}
+
+  flaresolverr:
+    image: "flaresolverr/flaresolverr"
+    container_name: flaresolverr
+    restart: always
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
 
 volumes:
   letsencrypt:
