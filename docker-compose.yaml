@@ -212,6 +212,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
     ports:
       - "80:80"
