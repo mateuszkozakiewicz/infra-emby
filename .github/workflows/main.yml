@@ -17,7 +17,7 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@4.1
         with:
-          switches: -avzr --quiet --include="docker-compose.yaml"
+          switches: -avzr --quiet --include="docker-compose.yaml" --exclude="*"
           remote_path: /srv/infrastructure
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_port: ${{ secrets.DEPLOY_PORT }}
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          script: cd /srv/infrastructure; echo "${{ secrets.DOCKER_COMPOSE_ENV }}" > .env; echo "${{ secrets.AUTHORIZED_EMAILS }}" > authorized-emails
+          script: cd /srv/infrastructure; echo "${{ secrets.DOCKER_COMPOSE_ENV }}" > .env
       - name: update images
         uses: appleboy/ssh-action@master
         with:
