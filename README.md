@@ -12,7 +12,7 @@
 - [watchtower](https://hub.docker.com/r/containrrr/watchtower)
 - [logrotate](https://hub.docker.com/r/blacklabelops/logrotate)
 - [traefik](https://hub.docker.com/_/traefik)
-- [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy)
+- [traefik-forward-auth](https://github.com/thomseddon/traefik-forward-auth)
 
 ## Local testing
 

@@ -13,8 +13,7 @@ services:
       - "traefik.http.routers.sonarr.rule=Host(`${SONARR_HOST}`)"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.sonarr.middlewares=traefik-real-ip"
-      - "traefik.http.routers.sonarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.sonarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.routers.sonarr-api.rule=Host(`${SONARR_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.sonarr-api.entrypoints=websecure"
       - "traefik.http.routers.sonarr-api.tls.certresolver=letsencrypt"
@@ -40,8 +39,7 @@ services:
       - "traefik.http.routers.radarr.rule=Host(`${RADARR_HOST}`)"
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.radarr.middlewares=traefik-real-ip"
-      - "traefik.http.routers.radarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.radarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.routers.radarr-api.rule=Host(`${RADARR_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.radarr-api.entrypoints=websecure"
       - "traefik.http.routers.radarr-api.tls.certresolver=letsencrypt"
@@ -67,8 +65,7 @@ services:
       - "traefik.http.routers.bazarr.rule=Host(`${BAZARR_HOST}`)"
       - "traefik.http.routers.bazarr.entrypoints=websecure"
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.bazarr.middlewares=traefik-real-ip"
-      - "traefik.http.routers.bazarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.bazarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -111,8 +108,7 @@ services:
       - "traefik.http.routers.jackett.rule=Host(`${JACKETT_HOST}`)"
       - "traefik.http.routers.jackett.entrypoints=websecure"
       - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.jackett.middlewares=traefik-real-ip"
-      - "traefik.http.routers.jackett.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.jackett.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.routers.jackett-api.rule=Host(`${JACKETT_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.jackett-api.entrypoints=websecure"
       - "traefik.http.routers.jackett-api.tls.certresolver=letsencrypt"
@@ -137,8 +133,7 @@ services:
       - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_HOST}`)"
       - "traefik.http.routers.prowlarr.entrypoints=websecure"
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.prowlarr.middlewares=traefik-real-ip"
-      - "traefik.http.routers.prowlarr.middlewares=authproxy-errors,authproxy-auth"
+      - "traefik.http.routers.prowlarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
@@ -164,10 +159,9 @@ services:
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOST}`)"
       - "traefik.http.routers.transmission.entrypoints=websecure"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.transmission.middlewares=traefik-real-ip,transmission-auth"
+      - "traefik.http.routers.transmission.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
-      - "traefik.http.routers.transmission.middlewares=authproxy-errors,authproxy-auth"
     environment:
       - PUID=911
       - UID=911
@@ -298,45 +292,17 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
 
-  authproxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy
-    container_name: "authproxy"
-    restart: always
-    command:
-      - --http-address=0.0.0.0:4180
-      - --provider=google
-      - --client-id=${OAUTH2_CLIENT_ID}
-      - --client-secret=${OAUTH2_CLIENT_SECRET}
-      - --cookie-secret=${OAUTH2_COOKIE_SECRET}
-      - --authenticated-emails-file=/var/authorized-emails
-      - --set-xauthrequest
-      - --cookie-expire=672h
-      - --cookie-refresh=1h
-      - --cookie-secure=true
-      - --cookie-httponly=true
-      - --request-logging=false
-      - --cookie-domain=${EMBY_HOST}
-      - --redirect-url=https://${AUTH_HOST}
-      - --set-authorization-header
-      - --reverse-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.authproxy.rule=Host(`${AUTH_HOST}`) || PathPrefix(`/oauth2`)"
-      - "traefik.http.routers.authproxy.entrypoints=websecure"
-      - "traefik.http.routers.authproxy.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.authproxy.middlewares=traefik-real-ip"
-      - "traefik.http.services.authproxy.loadbalancer.server.port=4180"
-      - "traefik.http.services.authproxy.loadbalancer.passHostHeader=false"
-      - "traefik.http.middlewares.authproxy-auth.forwardAuth.address=https://${AUTH_HOST}/oauth2/auth"
-      - "traefik.http.middlewares.authproxy-auth.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.authproxy-errors.errors.status=401-403"
-      - "traefik.http.middlewares.authproxy-errors.errors.service=authproxy@docker"
-      - "traefik.http.middlewares.authproxy-errors.errors.query=/oauth2/sign_in"
-      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:2
     environment:
-      - TZ=Europe/Warsaw
-    volumes:
-      - ./authorized-emails:/var/authorized-emails
+      - PROVIDERS_GOOGLE_CLIENT_ID=${OAUTH2_CLIENT_ID}
+      - PROVIDERS_GOOGLE_CLIENT_SECRET=${OAUTH2_CLIENT_SECRET}
+      - SECRET=${OAUTH2_COOKIE_SECRET}
+      - AUTH_HOST=${AUTH_HOST}
+    labels:
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
 
 volumes:
   letsencrypt:
