@@ -301,7 +301,7 @@ services:
       - "traefik.http.routers.traefik-forward-auth.rule=Host(`${AUTH_HOST}`)"
       - "traefik.http.routers.traefik-forward-auth.entrypoints=websecure"
       - "traefik.http.routers.traefik-forward-auth.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.traefik-forward-auth.middlewares=traefik-real-ip"
+      - "traefik.http.routers.traefik-forward-auth.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
@@ -310,6 +310,7 @@ services:
       - PROVIDERS_GOOGLE_CLIENT_SECRET=${OAUTH2_CLIENT_SECRET}
       - SECRET=${OAUTH2_COOKIE_SECRET}
       - AUTH_HOST=${AUTH_HOST}
+      - COOKIE_DOMAIN=${EMBY_HOST}
 
 volumes:
   letsencrypt:
