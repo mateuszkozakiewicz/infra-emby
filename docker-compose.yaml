@@ -13,14 +13,12 @@ services:
       - "traefik.http.routers.sonarr.rule=Host(`${SONARR_HOST}`)"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.sonarr.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.sonarr.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.sonarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.routers.sonarr-api.rule=Host(`${SONARR_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.sonarr-api.entrypoints=websecure"
       - "traefik.http.routers.sonarr-api.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.sonarr-api.middlewares=traefik-real-ip"
+      - "traefik.http.routers.sonarr-api.middlewares=traefik-real-ip"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -40,14 +38,12 @@ services:
       - "traefik.http.routers.radarr.rule=Host(`${RADARR_HOST}`)"
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.radarr.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.radarr.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.radarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.routers.radarr-api.rule=Host(`${RADARR_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.radarr-api.entrypoints=websecure"
       - "traefik.http.routers.radarr-api.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.radarr-api.middlewares=traefik-real-ip"
+      - "traefik.http.routers.radarr-api.middlewares=traefik-real-ip"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -67,10 +63,8 @@ services:
       - "traefik.http.routers.bazarr.rule=Host(`${BAZARR_HOST}`)"
       - "traefik.http.routers.bazarr.entrypoints=websecure"
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.bazarr.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.bazarr.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.bazarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -90,9 +84,8 @@ services:
       - "traefik.http.routers.emby.rule=Host(`${EMBY_HOST}`)"
       - "traefik.http.routers.emby.entrypoints=websecure"
       - "traefik.http.routers.emby.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.emby.middlewares=traefik-real-ip"
+      - "traefik.http.routers.emby.middlewares=traefik-real-ip"
       - "traefik.http.services.emby.loadbalancer.server.port=8096"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -110,10 +103,8 @@ services:
       - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_HOST}`)"
       - "traefik.http.routers.prowlarr.entrypoints=websecure"
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.prowlarr.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.prowlarr.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.prowlarr.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -137,10 +128,8 @@ services:
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_HOST}`)"
       - "traefik.http.routers.transmission.entrypoints=websecure"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.transmission.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.transmission.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.transmission.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - PUID=911
       - UID=911
@@ -208,15 +197,15 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=${DEFAULT_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
-      # - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
+      - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
+      - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.traefik.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.traefik.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.traefik.middlewares=traefik-real-ip,traefik-forward-auth"
+      - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
       - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
     ports:
       - "80:80"
@@ -240,8 +229,7 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST}`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
+      - "traefik.http.routers.whoami.middlewares=traefik-real-ip"
 
   jellyfin:
     image: "jellyfin/jellyfin"
@@ -258,9 +246,8 @@ services:
       - "traefik.http.routers.jellyfin.rule=Host(`${JELLYFIN_HOST}`)"
       - "traefik.http.routers.jellyfin.entrypoints=websecure"
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.jellyfin.middlewares=traefik-real-ip"
+      - "traefik.http.routers.jellyfin.middlewares=traefik-real-ip"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-      # - "traefik.http.middlewares.traefik-real-ip.plugin.traefik-real-ip.excludednets=1.1.1.1/24"
     environment:
       - JELLYFIN_PublishedServerUrl=https://${JELLYFIN_HOST}
       - PUID=911
@@ -280,8 +267,7 @@ services:
       - "traefik.http.routers.traefik-forward-auth.rule=Host(`${AUTH_HOST}`)"
       - "traefik.http.routers.traefik-forward-auth.entrypoints=websecure"
       - "traefik.http.routers.traefik-forward-auth.tls.certresolver=letsencrypt"
-      # - "traefik.http.routers.traefik-forward-auth.middlewares=traefik-real-ip,traefik-forward-auth"
-      - "traefik.http.routers.traefik-forward-auth.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.traefik-forward-auth.middlewares=traefik-real-ip,traefik-forward-auth"
       - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
       - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
