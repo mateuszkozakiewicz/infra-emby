@@ -205,8 +205,6 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
       - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
-      - "--experimental.plugins.rewrite.modulename=github.com/traefik/plugin-rewritebody"
-      - "--experimental.plugins.rewrite.version=v0.3.1"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
