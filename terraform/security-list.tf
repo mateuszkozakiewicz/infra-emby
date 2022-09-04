@@ -4,6 +4,7 @@ locals {
   ssh_port           = "22"
   http_port          = "80"
   https_port         = "443"
+  postgres_port      = "5432"
   security_list_name = "security-list"
 }
 
@@ -24,7 +25,7 @@ resource "oci_core_security_list" "security_list" {
     }
 
     protocol = local.tcp_protocol
-    source   = local.anywhere
+    source   = var.cluster_ip
   }
 
   ingress_security_rules {
@@ -45,5 +46,15 @@ resource "oci_core_security_list" "security_list" {
 
     protocol = local.tcp_protocol
     source   = local.anywhere
+  }
+
+  ingress_security_rules {
+    tcp_options {
+      min = local.postgres_port
+      max = local.postgres_port
+    }
+
+    protocol = local.tcp_protocol
+    source   = var.cluster_ip
   }
 }

@@ -26,3 +26,9 @@ variable "public_key" {
   description = "public ssh key"
   type        = string
 }
+
+variable "cluster_ip" {
+  description = "cluster IP"
+  type        = string
+  default     = "127.0.0.1/32"
+}
