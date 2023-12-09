@@ -103,8 +103,8 @@ resource "oci_core_security_list" "security_list" {
 
     content {
       tcp_options {
-        min = local.http_port
-        max = local.http_port
+        min = local.https_port
+        max = local.https_port
       }
 
       protocol = local.tcp_protocol
