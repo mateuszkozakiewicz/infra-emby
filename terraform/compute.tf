@@ -27,7 +27,7 @@ resource "oci_core_instance" "arm_instance" {
   # Optional
   display_name = "arm-instance"
   create_vnic_details {
-    assign_public_ip = true
+    assign_public_ip = false
     subnet_id        = oci_core_subnet.subnet.id
   }
   agent_config {

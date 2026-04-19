@@ -29,6 +29,7 @@ resource "oci_identity_user" "bucket_identity" {
   compartment_id = var.tenancy_ocid
   name           = "emby-bucket-identity-user"
   description    = "Service account for emby object storage"
+  email          = "admin@emby.red"
 }
 
 resource "oci_identity_group" "bucket_identity_group" {
