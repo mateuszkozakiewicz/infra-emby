@@ -11,7 +11,11 @@ terraform {
   required_providers {
     random = {
       source  = "hashicorp/random"
-      version = "3.0.1"
+      version = "3.8.1"
+    }
+    oci = {
+      source  = "oracle/oci"
+      version = "8.10.0"
     }
   }
   cloud {
