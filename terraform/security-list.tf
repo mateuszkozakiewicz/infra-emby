@@ -38,6 +38,11 @@ resource "oci_core_security_list" "security_list" {
     destination = local.anywhere
   }
 
+  egress_security_rules {
+    protocol    = local.udp_protocol
+    destination = local.anywhere
+  }
+
   ingress_security_rules {
     tcp_options {
       min = local.ssh_port
@@ -65,7 +70,7 @@ resource "oci_core_security_list" "security_list" {
     }
 
     protocol = local.udp_protocol
-    source   = var.cluster_ip
+    source   = local.anywhere
   }
 
   ingress_security_rules {
@@ -75,7 +80,7 @@ resource "oci_core_security_list" "security_list" {
     }
 
     protocol = local.udp_protocol
-    source   = var.cluster_ip
+    source   = local.anywhere
   }
 
   dynamic "ingress_security_rules" {
