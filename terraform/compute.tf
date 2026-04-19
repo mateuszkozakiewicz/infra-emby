@@ -44,3 +44,12 @@ resource "oci_core_instance" "arm_instance" {
   }
   preserve_boot_volume = false
 }
+
+data "oci_core_vnic_attachments" "arm_instance_vnic_attachments" {
+  compartment_id = var.compartment_ocid
+  instance_id    = oci_core_instance.arm_instance.id
+}
+
+data "oci_core_private_ips" "arm_instance_private_ip" {
+  vnic_id = data.oci_core_vnic_attachments.arm_instance_vnic_attachments.vnic_attachments[0].vnic_id
+}

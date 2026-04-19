@@ -65,4 +65,8 @@ resource "oci_core_public_ip" "public" {
   #Required
   compartment_id = var.compartment_ocid
   lifetime       = "RESERVED"
+
+  #Optional
+  display_name  = "public-ip"
+  private_ip_id = data.oci_core_private_ips.arm_instance_private_ip.private_ips[0].id
 }
