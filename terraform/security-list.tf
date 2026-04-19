@@ -55,6 +55,16 @@ resource "oci_core_security_list" "security_list" {
 
   ingress_security_rules {
     tcp_options {
+      min = local.https_port
+      max = local.https_port
+    }
+
+    protocol = local.tcp_protocol
+    source   = var.cluster_ip
+  }
+
+  ingress_security_rules {
+    tcp_options {
       min = local.postgres_port
       max = local.postgres_port
     }
