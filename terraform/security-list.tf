@@ -1,14 +1,16 @@
 locals {
-  tcp_protocol       = "6"
-  udp_protocol       = "17"
-  anywhere           = "0.0.0.0/0"
-  ssh_port           = "22"
-  http_port          = "80"
-  https_port         = "443"
-  openvpn_port       = "1194"
-  wireguard_port     = "1195"
-  postgres_port      = "5432"
-  security_list_name = "security-list"
+  tcp_protocol          = "6"
+  udp_protocol          = "17"
+  anywhere              = "0.0.0.0/0"
+  ssh_port              = "22"
+  http_port             = "80"
+  https_port            = "443"
+  openvpn_port          = "1194"
+  wireguard_port        = "1195"
+  postgres_port         = "5432"
+  node_exporter_port    = "9100"
+  process_exporter_port = "9256"
+  security_list_name    = "security-list"
   cloudflare_ips = [
     "173.245.48.0/20",
     "103.21.244.0/22",
@@ -57,6 +59,26 @@ resource "oci_core_security_list" "security_list" {
     tcp_options {
       min = local.https_port
       max = local.https_port
+    }
+
+    protocol = local.tcp_protocol
+    source   = var.cluster_ip
+  }
+
+  ingress_security_rules {
+    tcp_options {
+      min = local.node_exporter_port
+      max = local.node_exporter_port
+    }
+
+    protocol = local.tcp_protocol
+    source   = var.cluster_ip
+  }
+
+  ingress_security_rules {
+    tcp_options {
+      min = local.process_exporter_port
+      max = local.process_exporter_port
     }
 
     protocol = local.tcp_protocol
