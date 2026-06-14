@@ -1,8 +1,8 @@
 locals {
   oracle_linux_8_5_image_ocid = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaalipbcpelzws3vnyobw5o2oci4oc66yqgsrh652awpuuiqkruwfaq" # https://docs.oracle.com/en-us/iaas/images/image/17fdec28-66b3-4169-9e7d-125f57e58c74/
   shape                       = "VM.Standard.A1.Flex"
-  memory                      = 24
-  ocpus                       = 4
+  memory                      = 12
+  ocpus                       = 2
   volume_size                 = 200
 }
 
